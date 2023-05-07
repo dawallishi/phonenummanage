@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
+</head>
+<style>
+    .login-box {
+        width: 400px;
+        margin: 220px auto 0;
+        border: 1px solid #ffff00;
+        padding: 20px;
+    }
+
+    .login-box h1 {
+        text-align: center;
+    }
+</style>
+<body>
+<div class="login-box">
+    <h1>登录</h1>
+    <form method="post" action="/login/" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+            <label>{{ form.username.label }}</label>
+            {{ form.username }}
+            <span style="color: red">{{ form.username.errors.0 }}</span>
+        </div>
+        <div class="form-group">
+            <label>{{ form.password.label }}</label>
+            {{ form.password }}
+            <span style="color: red">{{ form.password.errors.0 }}</span>
+        </div>
+        <div class="form-group">
+            <label>{{ form.code.label }}</label>
+            <div class="row">
+                <div class="col-xs-6">
+                    {{ form.code }}
+                </div>
+                <div class="col-xs-6">
+                    <img src="/img/code/" id="CodeImg" style="cursor: pointer">
+                </div>
+            </div>
+            <span style="color: red">{{ form.code.errors.0 }}</span>
+        </div>
+        <button type="submit" class="btn btn-primary">提 交</button>
+        <span style="color: red">{{ error }}</span>
+    </form>
+</div>
+<script src="{% static 'js/jquery3.6.0.js' %}"></script>
+<script>
+    $(function () {
+        $("#CodeImg").click(function () {
+            {#获取到当前的图片url，再赋新url改变图片#}
+            var url = $(this).attr('src');
+            $(this).attr('src', url + "?");
+        });
+    })
+</script>
+</body>
+</html>

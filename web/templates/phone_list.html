@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div style="margin-top: 10px;margin-bottom: 10px;">
+        <a class="btn btn-success" href="/phone/add/">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            新建手机号
+        </a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>手机号</th>
+            <th>价格</th>
+            <th>级别</th>
+            <th>状态</th>
+            <th>管理员</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in queryset %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.mobile }}</td>
+                <td>{{ row.price }}</td>
+                <td>{{ row.get_level_display }}</td>
+                <td>{{ row.get_status_display }}</td>
+                <td>{{ row.admin.username }}</td>
+                <td>
+                    <a class="btn btn-primary btn-xs" href="/phone/edit/{{ row.id }}/">
+                        编辑
+                    </a>
+                    <input type="button" value="删 除" class="btn btn-danger btn-xs"
+                           onclick="deleteAction({{ row.id }});">
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4>是否确定删除？</h4>
+                <p>删除后，与之关联的所有相关的数据都会被删除掉，确认是否继续？</p>
+                <p>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">确 认</button>
+                    <button type="button" class="btn btn-default" onclick="cancelDelete()">取 消</button>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        DELETE_ID = 0;
+
+        function deleteAction(id) {
+            {#当前要删除的id#}
+            DELETE_ID = id;
+            $('#myModal').modal("show")
+        }
+
+        function confirmDelete(id) {
+            {#像后端发送删除请求#}
+            {#页面刷新#}
+            // xxx/admin/delete/?pid=DELETE_ID
+            $.ajax({
+                url: "/phone/delete/",
+                type: "GET",
+                data: {
+                    pid: DELETE_ID
+                },
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        // 刷新页面
+                        location.reload()
+                    } else {
+                        alert(res.error);
+                    }
+                }
+            })
+        }
+
+        function cancelDelete() {
+            DELETE_ID = 0;
+            $('#myModal').modal("hide");
+        }
+    </script>
+{% endblock %}

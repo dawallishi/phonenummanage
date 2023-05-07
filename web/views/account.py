@@ -49,7 +49,6 @@ def login(request):
     username = form.cleaned_data["username"]
     password = form.cleaned_data["password"]  # md5 加密在与数据库比较
     encrypted_password = md5(password)
-    print(encrypted_password)
     admin_object = models.Admin.objects.filter(username=username, password=encrypted_password).first()
     if not admin_object:
         return render(request, "login.html", {"form": form, "error": "用户名或密码错误"})

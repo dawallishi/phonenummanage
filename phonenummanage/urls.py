@@ -18,6 +18,7 @@ from django.urls import path
 from web.views import account, admin, phone
 
 urlpatterns = [
+    path('',account.login),
     # path('admin/', admin.site.urls),
     path('login/', account.login),
     path('logout/', account.logout),
